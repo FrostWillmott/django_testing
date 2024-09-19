@@ -59,7 +59,7 @@ def test_pages_availability_for_different_users(parametrized_client,
         ('news:delete', pytest.lazy_fixture('id_post_for_args')),
     ),
 )
-def test_redirects(client, name, args, db):
+def test_redirects(client, name, args):
     login_url = reverse('users:login')
     url = reverse(name, args=args)
     expected_url = f'{login_url}?next={url}'
