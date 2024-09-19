@@ -54,18 +54,12 @@ def comment(news, author):
 
 
 @pytest.fixture
-# Фикстура запрашивает другую фикстуру создания заметки.
 def id_for_args(news):
-    # И возвращает кортеж, который содержит slug заметки.
-    # На то, что это кортеж, указывает запятая в конце выражения.
     return (news.id,)
 
 
 @pytest.fixture
-# Фикстура запрашивает другую фикстуру создания заметки.
 def id_post_for_args(comment):
-    # И возвращает кортеж, который содержит slug заметки.
-    # На то, что это кортеж, указывает запятая в конце выражения.
     return (comment.id,)
 
 
@@ -74,7 +68,6 @@ def anonymous_client():
     return Client()
 
 
-# Добавляем фикстуру form_data
 @pytest.fixture
 def form_data(news, author):
     return {
