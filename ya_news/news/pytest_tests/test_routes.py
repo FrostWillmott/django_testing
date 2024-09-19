@@ -45,7 +45,7 @@ def test_pages_availability_for_anonymous_user(client, name,
 )
 def test_pages_availability_for_different_users(parametrized_client,
                                                 expected_status, name,
-                                                args, db):
+                                                args):
     url = reverse(name, args=args)
     response = parametrized_client.get(url)
     assert response.status_code == expected_status
