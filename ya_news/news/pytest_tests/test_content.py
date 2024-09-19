@@ -44,7 +44,7 @@ def test_comment_form_visibility_for_anonymous_user(anonymous_client,
     response = anonymous_client.get(
         reverse('news:detail', args=args))
     assert response.status_code == HTTPStatus.OK
-    assert not 'form' in response.context
+    assert 'form' not in response.context
 
 
 @pytest.mark.parametrize(

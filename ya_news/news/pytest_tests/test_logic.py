@@ -6,8 +6,6 @@ from news.models import Comment
 from news.forms import BAD_WORDS, WARNING
 import pytest
 
-from news.pytest_tests.conftest import id_for_args
-
 
 @pytest.mark.django_db
 def test_anonymous_user_cant_post_comment(client, form_data,
