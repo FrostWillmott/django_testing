@@ -35,8 +35,7 @@ def test_comments_order_on_news_detail(not_author_client, news,
 @pytest.mark.parametrize(
     'name, args',
     (
-            ('news:detail', pytest.lazy_fixture('id_for_args')),
-
+        ('news:detail', pytest.lazy_fixture('id_for_args')),
     )
 )
 def test_comment_form_visibility_for_anonymous_user(anonymous_client,
@@ -50,7 +49,7 @@ def test_comment_form_visibility_for_anonymous_user(anonymous_client,
 @pytest.mark.parametrize(
     'name, args',
     (
-            ('news:detail', pytest.lazy_fixture('id_for_args')),
+        ('news:detail', pytest.lazy_fixture('id_for_args')),
     )
 )
 def test_comment_form_visibility_for_authenticated_user(

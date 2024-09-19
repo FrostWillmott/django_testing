@@ -12,11 +12,11 @@ from pytest_django.asserts import assertRedirects
 @pytest.mark.parametrize(
     'name, args',
     (
-            ('news:home', None),
-            ('news:detail', pytest.lazy_fixture('id_for_args')),
-            ('users:login', None),
-            ('users:logout', None),
-            ('users:signup', None),
+        ('news:home', None),
+        ('news:detail', pytest.lazy_fixture('id_for_args')),
+        ('users:login', None),
+        ('users:logout', None),
+        ('users:signup', None),
     )
 )
 def test_pages_availability_for_anonymous_user(client, name,
@@ -30,17 +30,17 @@ def test_pages_availability_for_anonymous_user(client, name,
 @pytest.mark.parametrize(
     'parametrized_client, expected_status',
     (
-            (
-                    pytest.lazy_fixture('not_author_client'),
-                    HTTPStatus.NOT_FOUND),
-            (pytest.lazy_fixture('author_client'), HTTPStatus.OK)
+        (
+            pytest.lazy_fixture('not_author_client'),
+            HTTPStatus.NOT_FOUND),
+        (pytest.lazy_fixture('author_client'), HTTPStatus.OK)
     ),
 )
 @pytest.mark.parametrize(
     'name, args',
     (
-            ('news:edit', pytest.lazy_fixture('id_post_for_args')),
-            ('news:delete', pytest.lazy_fixture('id_post_for_args')),
+        ('news:edit', pytest.lazy_fixture('id_post_for_args')),
+        ('news:delete', pytest.lazy_fixture('id_post_for_args')),
     )
 )
 def test_pages_availability_for_different_users(parametrized_client,
@@ -55,8 +55,8 @@ def test_pages_availability_for_different_users(parametrized_client,
 @pytest.mark.parametrize(
     'name, args',
     (
-            ('news:edit', pytest.lazy_fixture('id_post_for_args')),
-            ('news:delete', pytest.lazy_fixture('id_post_for_args')),
+        ('news:edit', pytest.lazy_fixture('id_post_for_args')),
+        ('news:delete', pytest.lazy_fixture('id_post_for_args')),
     ),
 )
 def test_redirects(client, name, args, db):
