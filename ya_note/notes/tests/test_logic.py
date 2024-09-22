@@ -1,27 +1,22 @@
 from http import HTTPStatus
 
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
 from django.test import TestCase, Client
 from django.urls import reverse
 from pytils.translit import slugify
 
 from notes.models import Note
-from notes.forms import WARNING, NoteForm
+from notes.forms import WARNING
 
 User = get_user_model()
 
 
 class TestNotesCreation(TestCase):
-    """
-    Тесты проверяют создание заметок.
-    """
+    """Тесты проверяют создание заметок."""
 
     @classmethod
     def setUpTestData(cls):
-        """
-        Создаём пользователя, автора заметки и заметку.
-        """
+        """Создаём пользователя, автора заметки и заметку."""
         cls.user = User.objects.create(username='Мимо Крокодил')
         cls.author = User.objects.create(username='Лев Толстой')
         cls.note = Note.objects.create(
@@ -38,9 +33,7 @@ class TestNotesCreation(TestCase):
                          'slug': 'newslug'}
 
     def test_anonymous_user_cant_create_note(self):
-        """
-        Проверяем, что анонимный пользователь не может создать заметку.
-        """
+        """Проверяем, что анонимный пользователь не может создать заметку."""
         note_count_before = Note.objects.count()
         response = self.client.post(self.url, data=self.form_data)
         self.assertRedirects(response,
@@ -50,9 +43,7 @@ class TestNotesCreation(TestCase):
                          note_count_before), "Заметка создана"
 
     def test_authenticated_user_can_create_note(self):
-        """
-        Проверяем, что аутентифицированный пользователь может создать заметку.
-        """
+        """Проверяем, что аутентифицированный пользователь может создать заметку."""
         note_count_before = Note.objects.count()
         response = self.auth_client.post(self.url,
                                          data=self.form_data)
@@ -71,9 +62,7 @@ class TestNotesCreation(TestCase):
             'slug']), "Slug новой заметки не совпадает с формой"
 
     def test_cannot_create_note_with_duplicate_slug(self):
-        """
-        Проверяем, что нельзя создать заметку с дублирующимся slug.
-        """
+        """Проверяем, что нельзя создать заметку с дублирующимся slug."""
         note_count_before = Note.objects.count()
         form_data = self.form_data.copy()
         form_data['slug'] = self.note.slug
@@ -89,9 +78,7 @@ class TestNotesCreation(TestCase):
                              WARNING), "Сообщение об ошибке не соответствует ожидаемому"
 
     def test_slug_is_generated_if_not_provided(self):
-        """
-        Проверяем, что slug генерируется, если не указан в форме.
-        """
+        """Проверяем, что slug генерируется, если не указан в форме."""
         form_data = self.form_data.copy()
         form_data['slug'] = ''
         response = self.auth_client.post(self.url,
@@ -104,9 +91,7 @@ class TestNotesCreation(TestCase):
 
 
 class TestNoteEditDelete(TestCase):
-    """
-    Тесты проверяют редактирование и удаление заметок.
-    """
+    """Тесты проверяют редактирование и удаление заметок."""
     NOTE_TEXT = 'Текст заметки'
     NEW_NOTE_TEXT = 'Обновлённая заметка'
     NOTE_TITLE = 'Новый заголовок'
@@ -116,9 +101,7 @@ class TestNoteEditDelete(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        """
-        Создаём автора, читателя, заметку и форму.
-        """
+        """Создаём автора, читателя, заметку и форму."""
         cls.author = User.objects.create(username='Автор заметки')
         cls.author_client = Client()
         cls.author_client.force_login(cls.author)
@@ -139,9 +122,7 @@ class TestNoteEditDelete(TestCase):
                          'slug': cls.NEW_NOTE_SLUG}
 
     def test_author_can_edit_own_note(self):
-        """
-        Проверяем, что автор может отредактировать свою заметку.
-        """
+        """Проверяем, что автор может отредактировать свою заметку."""
         response = self.author_client.post(self.edit_url,
                                            data=self.form_data)
         self.assertRedirects(response,
@@ -155,9 +136,7 @@ class TestNoteEditDelete(TestCase):
                          self.NEW_NOTE_SLUG), "Slug заметки не обновлён"
 
     def test_author_can_delete_own_note(self):
-        """
-        Проверяем, что автор может удалить свою заметку.
-        """
+        """Проверяем, что автор может удалить свою заметку."""
         note_count_before = Note.objects.count()
         response = self.author_client.post(self.delete_url)
         self.assertRedirects(response,
@@ -166,9 +145,7 @@ class TestNoteEditDelete(TestCase):
                          note_count_before - 1), "Заметка не удалена"
 
     def test_reader_cannot_edit_others_note(self):
-        """
-        Проверяем, что читатель не может редактировать чужую заметку.
-        """
+        """Проверяем, что читатель не может редактировать чужую заметку."""
         response = self.reader_client.post(self.edit_url,
                                            data=self.form_data)
         self.assertEqual(response.status_code,
@@ -182,9 +159,7 @@ class TestNoteEditDelete(TestCase):
                          self.NOTE_SLUG), "Slug заметки изменён"
 
     def test_reader_cannot_delete_others_note(self):
-        """
-        Проверяем, что читатель не может удалить чужую заметку.
-        """
+        """Проверяем, что читатель не может удалить чужую заметку."""
         note_count_before = Note.objects.count()
         response = self.reader_client.post(self.delete_url)
         self.assertEqual(response.status_code,

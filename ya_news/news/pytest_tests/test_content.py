@@ -54,8 +54,7 @@ def test_comment_form_visibility(user_login_type,
     а авторизованному доступна.
     """
     response = user_login_type.get(news_detail_url)
-    assert expected_answer in response.context,\
-        f"No {expected_answer} for {user_login_type} in context"
+    assert expected_answer in response.context,f"No {expected_answer} for {user_login_type} in context"
     if expected_answer == 'form':
         assert isinstance(response.context['form'],
                           CommentForm), "Form is not an instance of CommentForm"

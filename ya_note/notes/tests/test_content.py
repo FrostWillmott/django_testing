@@ -9,15 +9,11 @@ User = get_user_model()
 
 
 class TestContent(TestCase):
-    """
-    Тесты проверяют, что на страницах присутствует ожидаемый контент.
-    """
+    """Тесты проверяют, что на страницах присутствует ожидаемый контент."""
 
     @classmethod
     def setUpTestData(cls):
-        """
-        Создаём пользователей и заметку.
-        """
+        """Создаём пользователей и заметку."""
         cls.author = User.objects.create(username='Лев Толстой')
         cls.author_client = Client()
         cls.author_client.force_login(cls.author)
@@ -33,7 +29,8 @@ class TestContent(TestCase):
 
     def test_notes_accessibility_for_different_users(self):
         """
-        Проверяем, что отдельная заметка передаётся на страницу со списком заметок в списке object_list в словаре context
+        Проверяем, что отдельная заметка передаётся на страницу
+        со списком заметок в списке object_list в словаре context
         """
         expected_resaults = (
             (
@@ -46,25 +43,29 @@ class TestContent(TestCase):
             ),
         )
         for user_client, expected_context in expected_resaults:
-            with self.subTest(user_client=user_client):
+            with ((((self.subTest(user_client=user_client))))):
                 url = reverse('notes:list')
                 response = user_client.get(url)
                 self.assertIs(expected_context,
                               self.note in response.context[
-                                  'object_list']), "Статус наличия заметки в списке object_list не соответствует ожидаемому"
+                                  'object_list']),
+                "Статус наличия заметки в списке object_list не соответствует ожидаемому"
 
     def test_forms_in_create_and_edit_pages(self):
         """
-        Проверяем, что на страницы создания и редактирования заметки передаются формы.
+        Проверяем, что на страницы создания
+        и редактирования заметки передаются формы.
         """
         urls = (
             reverse('notes:add'),
             reverse('notes:edit', args=(self.note.slug,)),
         )
         for url in urls:
-            with self.subTest(url=url):
+            with (((((self.subTest(url=url)))))):
                 response = self.author_client.get(url)
                 self.assertIn('form',
-                              response.context), "На страницу не передана форма"
+                              response.context),
+                "На страницу не передана форма"
                 self.assertIsInstance(response.context['form'],
-                                      NoteForm), "Форма передана, но это не форма NoteForm"
+                                      NoteForm),
+                "Форма передана, но это не форма NoteForm"
