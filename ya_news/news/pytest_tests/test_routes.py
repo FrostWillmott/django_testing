@@ -68,6 +68,5 @@ def test_redirects(client, name_url, user_login_url):
     """
     expected_url = f'{user_login_url}?next={name_url}'
     response = client.get(name_url)
-    (assertRedirects(response,
-                    expected_url),
-        f'Page {name_url} not redirected to {expected_url}')
+    (assertRedirects(response, expected_url),
+     f'Page {name_url} not redirected to {expected_url}')

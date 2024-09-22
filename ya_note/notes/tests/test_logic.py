@@ -78,8 +78,7 @@ class TestNotesCreation(TestCase):
         self.assertEqual(note_count,
                          note_count_before), "Заметка создана"
         (self.assertFormError(response, 'form', 'slug',
-                             'slug' + WARNING,
-                             WARNING),
+                              'slug' + WARNING),
          "Сообщение об ошибке не соответствует ожидаемому")
 
     def test_slug_is_generated_if_not_provided(self):
@@ -130,8 +129,7 @@ class TestNoteEditDelete(TestCase):
         """Проверяем, что автор может отредактировать свою заметку."""
         response = self.author_client.post(self.edit_url,
                                            data=self.form_data)
-        (self.assertRedirects(response,
-                             self.success_url),
+        (self.assertRedirects(response, self.success_url),
          "Страница успешного выполнения операции не открыта")
         self.note.refresh_from_db()
         self.assertEqual(self.note.text,
@@ -145,11 +143,10 @@ class TestNoteEditDelete(TestCase):
         """Проверяем, что автор может удалить свою заметку."""
         note_count_before = Note.objects.count()
         response = self.author_client.post(self.delete_url)
-        (self.assertRedirects(response,
-                             self.success_url),
+        (self.assertRedirects(response, self.success_url),
          "Страница успешного выполнения операции не открыта")
         (self.assertEqual(Note.objects.count(),
-                         note_count_before - 1),
+                          note_count_before - 1),
          "Заметка не удалена")
 
     def test_reader_cannot_edit_others_note(self):
