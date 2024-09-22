@@ -20,7 +20,8 @@ def test_pages_availability_for_anonymous_user(client, name_url):
     Проверяем доступность страниц для анонимного пользователя.
     """
     response = client.get(name_url)
-    assert response.status_code == HTTPStatus.OK, f'Страница {name_url} недоступна'
+    assert response.status_code == HTTPStatus.OK,\
+        f'Страница {name_url} недоступна'
 
 
 @pytest.mark.parametrize(
@@ -47,7 +48,9 @@ def test_pages_availability_for_different_users(parametrized_client,
     или удаления чужих комментариев (возвращается ошибка 404).
     """
     response = parametrized_client.get(name_url)
-    assert response.status_code == expected_status, f'Page {name_url} returned {response.status_code} for {parametrized_client}, but expected {expected_status}'
+    assert response.status_code == expected_status,\
+        (f'Page {name_url} returned {response.status_code}'
+         f' for {parametrized_client}, but expected {expected_status}')
 
 
 @pytest.mark.django_db
@@ -65,5 +68,6 @@ def test_redirects(client, name_url, user_login_url):
     """
     expected_url = f'{user_login_url}?next={name_url}'
     response = client.get(name_url)
-    assertRedirects(response,
-                    expected_url), f'Page {name_url} not redirected to {expected_url}'
+    (assertRedirects(response,
+                    expected_url),
+     f'Page {name_url} not redirected to {expected_url}')
