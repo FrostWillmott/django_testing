@@ -43,12 +43,16 @@ class TestNotesCreation(TestCase):
                          note_count_before), "Заметка создана"
 
     def test_authenticated_user_can_create_note(self):
-        """Проверяем, что аутентифицированный пользователь может создать заметку."""
+        """
+        Проверяем, что аутентифицированный пользователь
+        может создать заметку.
+        """
         note_count_before = Note.objects.count()
         response = self.auth_client.post(self.url,
                                          data=self.form_data)
-        self.assertRedirects(response, reverse(
-            'notes:success')), "Страница успешного выполнения операции не открыта"
+        (self.assertRedirects(response, reverse(
+            'notes:success')),
+         "Страница успешного выполнения операции не открыта")
         note_count = Note.objects.count()
         self.assertEqual(note_count,
                          (note_count_before + 1)), "Заметка не создана"
@@ -73,9 +77,10 @@ class TestNotesCreation(TestCase):
         note_count = Note.objects.count()
         self.assertEqual(note_count,
                          note_count_before), "Заметка создана"
-        self.assertFormError(response, 'form', 'slug',
+        (self.assertFormError(response, 'form', 'slug',
                              'slug' + WARNING,
-                             WARNING), "Сообщение об ошибке не соответствует ожидаемому"
+                             WARNING),
+         "Сообщение об ошибке не соответствует ожидаемому")
 
     def test_slug_is_generated_if_not_provided(self):
         """Проверяем, что slug генерируется, если не указан в форме."""
@@ -125,8 +130,9 @@ class TestNoteEditDelete(TestCase):
         """Проверяем, что автор может отредактировать свою заметку."""
         response = self.author_client.post(self.edit_url,
                                            data=self.form_data)
-        self.assertRedirects(response,
-                             self.success_url), "Страница успешного выполнения операции не открыта"
+        (self.assertRedirects(response,
+                             self.success_url),
+         "Страница успешного выполнения операции не открыта")
         self.note.refresh_from_db()
         self.assertEqual(self.note.text,
                          self.NEW_NOTE_TEXT), "Текст заметки не обновлён"
@@ -139,10 +145,12 @@ class TestNoteEditDelete(TestCase):
         """Проверяем, что автор может удалить свою заметку."""
         note_count_before = Note.objects.count()
         response = self.author_client.post(self.delete_url)
-        self.assertRedirects(response,
-                             self.success_url), "Страница успешного выполнения операции не открыта"
-        self.assertEqual(Note.objects.count(),
-                         note_count_before - 1), "Заметка не удалена"
+        (self.assertRedirects(response,
+                             self.success_url),
+         "Страница успешного выполнения операции не открыта")
+        (self.assertEqual(Note.objects.count(),
+                         note_count_before - 1),
+         "Заметка не удалена")
 
     def test_reader_cannot_edit_others_note(self):
         """Проверяем, что читатель не может редактировать чужую заметку."""

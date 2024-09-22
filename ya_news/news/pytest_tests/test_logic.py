@@ -15,14 +15,18 @@ def test_anonymous_user_cant_post_comment(client, form_data,
     response = client.post(news_detail_url, data=form_data)
     expected_url = f'{user_login_url}?next={news_detail_url}'
     assertRedirects(response, expected_url)
-    assert Comment.objects.count() == 0, "Comment was created, but it shouldn't be"
+    assert Comment.objects.count() == 0, \
+        "Comment was created, but it shouldn't be"
 
 
 def test_authenticated_user_can_post_comment(not_author_client,
                                              news_detail_url,
                                              not_author,
                                              form_data, news):
-    """Проверяем, что авторизованный пользователь может оставить комментарий."""
+    """
+    Проверяем, что авторизованный пользователь
+    может оставить комментарий.
+    """
     response = not_author_client.post(news_detail_url, data=form_data)
     expected_url = f'{news_detail_url}#comments'
     assertRedirects(response, expected_url)
@@ -53,7 +57,8 @@ def test_comment_with_prohibited_words(author_client, bad_word,
         field='text',
         errors=WARNING
     )
-    assert Comment.objects.count() == 0, "Comment was created, but it shouldn't be"
+    assert Comment.objects.count() == 0, \
+        "Comment was created, but it shouldn't be"
 
 
 def test_author_can_edit_comment(author_client, form_data, news,

@@ -43,7 +43,10 @@ class TestRoutes(TestCase):
                                  HTTPStatus.OK), f'Страница {name} недоступна'
 
     def test_authenticated_user_pages(self):
-        """Проверяем доступность страниц для аутентифицированного пользователя"""
+        """
+        Проверяем доступность страниц
+        для аутентифицированного пользователя
+        """
         urls = (
             'notes:list',
             'notes:success',
@@ -96,4 +99,4 @@ class TestRoutes(TestCase):
                 response = self.client.get(url)
                 self.assertRedirects(response,
                                      redirect_url),
-                f'Анонимный пользователь не перенаправлен на страницу логина со страницы {name}'
+                f'Нет перенаправления на страницу логина со страницы {name}'

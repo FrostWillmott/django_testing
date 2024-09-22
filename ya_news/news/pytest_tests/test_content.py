@@ -18,9 +18,11 @@ def test_news_on_homepage(client, home_page_url, lots_of_news):
     all_timestamps = [news.date for news in all_news]
     sorted_timestamps = sorted(all_timestamps)
     assert all_news.count() == NEWS_COUNT_ON_HOME_PAGE,\
-        "Number of news on the home page is not equal to NEWS_COUNT_ON_HOME_PAGE"
+        ("Number of news on the home page"
+         " is not equal to NEWS_COUNT_ON_HOME_PAGE")
     assert all_timestamps == sorted_timestamps,\
-        "News are not sorted by date, the newest news should be at the top of the list"
+        ("News are not sorted by date,"
+         " the newest news should be at the top of the list")
 
 
 @pytest.mark.django_db
@@ -35,15 +37,16 @@ def test_comments_order_on_news_detail(news,
     all_timestamps = [comment.created for comment in all_comments]
     sorted_timestamps = sorted(all_timestamps)
     assert all_timestamps == sorted_timestamps,\
-        "Comments are not sorted by date, the newest comments should be at the bottom of the list"
+        ("Comments are not sorted by date,"
+         " the newest comments should be at the bottom of the list")
 
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     'user_login_type, expected_answer',
     (
-            (pytest.lazy_fixture('client'), not 'form'),
-            (pytest.lazy_fixture('not_author_client'), 'form'),
+        (pytest.lazy_fixture('client'), not 'form'),
+        (pytest.lazy_fixture('not_author_client'), 'form'),
     )
 )
 def test_comment_form_visibility(user_login_type,
@@ -54,7 +57,9 @@ def test_comment_form_visibility(user_login_type,
     а авторизованному доступна.
     """
     response = user_login_type.get(news_detail_url)
-    assert expected_answer in response.context,f"No {expected_answer} for {user_login_type} in context"
+    assert expected_answer in response.context, \
+        f"No {expected_answer} for {user_login_type} in context"
     if expected_answer == 'form':
         assert isinstance(response.context['form'],
-                          CommentForm), "Form is not an instance of CommentForm"
+                          CommentForm), \
+            "Form is not an instance of CommentForm"

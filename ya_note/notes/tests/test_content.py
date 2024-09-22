@@ -43,13 +43,13 @@ class TestContent(TestCase):
             ),
         )
         for user_client, expected_context in expected_resaults:
-            with ((((self.subTest(user_client=user_client))))):
+            with self.subTest(user_client=user_client):
                 url = reverse('notes:list')
                 response = user_client.get(url)
                 self.assertIs(expected_context,
                               self.note in response.context[
                                   'object_list']),
-                "Статус наличия заметки в списке object_list не соответствует ожидаемому"
+                "Статус наличия заметки в списке не соответствует ожидаемому"
 
     def test_forms_in_create_and_edit_pages(self):
         """
