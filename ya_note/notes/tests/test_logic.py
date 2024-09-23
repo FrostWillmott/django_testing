@@ -30,7 +30,9 @@ class TestNotesCreation(TestCase):
             author=cls.author,
         )
         cls.note_add_url = reverse("notes:add")
-        cls.anonym_user_redir_url = f'{reverse("users:login")}?next={cls.note_add_url}'
+        cls.anonym_user_redir_url = (
+            f'{reverse("users:login")}?next={cls.note_add_url}'
+        )
         cls.auth_client = Client()
         cls.auth_client.force_login(cls.user)
         cls.form_data = {
@@ -58,12 +60,16 @@ class TestNotesCreation(TestCase):
         Проверяем, что аутентифицированный пользователь может создать заметку.
         """
         note_count_before = Note.objects.count()
-        response = self.auth_client.post(self.note_add_url, data=self.form_data)
+        response = self.auth_client.post(
+            self.note_add_url, data=self.form_data
+        )
         self.assertRedirects(
             response, reverse("notes:success")
         ), "Страница успешного выполнения операции не открыта"
         note_count = Note.objects.count()
-        self.assertEqual(note_count, (note_count_before + 1)), "Заметка не создана"
+        self.assertEqual(note_count, (note_count_before + 1)), (
+            "Заметка" " не создана"
+        )
         new_note = Note.objects.latest("id")
         self.assertEqual(new_note.author, self.user)
         self.assertEqual(
@@ -82,7 +88,9 @@ class TestNotesCreation(TestCase):
         """
         note_count_before = Note.objects.count()
         self.form_data["slug"] = self.note.slug
-        response = self.auth_client.post(self.note_add_url, data=self.form_data)
+        response = self.auth_client.post(
+            self.note_add_url, data=self.form_data
+        )
         self.assertEqual(
             response.status_code, HTTPStatus.OK
         ), "Запрос не вернул код 200"
@@ -97,7 +105,9 @@ class TestNotesCreation(TestCase):
         Проверяем, что slug генерируется, если не указан в форме.
         """
         self.form_data.pop("slug")
-        response = self.auth_client.post(self.note_add_url, data=self.form_data)
+        response = self.auth_client.post(
+            self.note_add_url, data=self.form_data
+        )
         self.assertEqual(
             response.status_code, HTTPStatus.FOUND
         ), "Запрос не вернул код 302"
@@ -186,9 +196,15 @@ class TestNoteEditDelete(TestCase):
             response.status_code, HTTPStatus.NOT_FOUND
         ), "Страница не вернула код 404"
         self.note.refresh_from_db()
-        self.assertEqual(self.note.text, self.NOTE_TEXT), "Текст заметки изменён"
-        self.assertEqual(self.note.title, self.NOTE_TITLE), "Заголовок заметки изменён"
-        self.assertEqual(self.note.slug, self.NOTE_SLUG), "Slug заметки изменён"
+        self.assertEqual(
+            self.note.text, self.NOTE_TEXT
+        ), "Текст заметки изменён"
+        self.assertEqual(
+            self.note.title, self.NOTE_TITLE
+        ), "Заголовок заметки изменён"
+        self.assertEqual(
+            self.note.slug, self.NOTE_SLUG
+        ), "Slug заметки изменён"
 
     def test_reader_cannot_delete_others_note(self):
         """
@@ -199,4 +215,6 @@ class TestNoteEditDelete(TestCase):
         self.assertEqual(
             response.status_code, HTTPStatus.NOT_FOUND
         ), "Страница не вернула код 404"
-        self.assertEqual(Note.objects.count(), note_count_before), "Заметка удалена"
+        self.assertEqual(
+            Note.objects.count(), note_count_before
+        ), "Заметка удалена"

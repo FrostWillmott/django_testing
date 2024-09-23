@@ -7,13 +7,16 @@ from yanews.settings import NEWS_COUNT_ON_HOME_PAGE
 @pytest.mark.django_db
 def test_news_count_on_homepage(client, home_page_url, lots_of_news):
     """
-    Проверяем, что количество новостей на главной странице равно NEWS_COUNT_ON_HOME_PAGE.
-    Новости отсортированы от самой свежей к самой старой. Свежие новости в начале списка.
+    Проверяем, что количество новостей на главной странице
+    равно NEWS_COUNT_ON_HOME_PAGE.
+    Новости отсортированы от самой свежей к самой старой.
+    Свежие новости в начале списка.
     """
     all_news = client.get(home_page_url).context.get("object_list")
-    assert (
-        all_news.count() == NEWS_COUNT_ON_HOME_PAGE
-    ), "Количество новостей на главной странице не равно NEWS_COUNT_ON_HOME_PAGE"
+    assert all_news.count() == NEWS_COUNT_ON_HOME_PAGE, (
+        "Количество новостей на главной странице"
+        " не равно NEWS_COUNT_ON_HOME_PAGE"
+    )
 
 
 @pytest.mark.django_db
@@ -21,9 +24,10 @@ def test_news_order_on_homepage(client, home_page_url, lots_of_news):
     all_news = client.get(home_page_url).context.get("object_list")
     all_timestamps = [news.date for news in all_news]
     sorted_timestamps = sorted(all_timestamps)
-    assert (
-        all_timestamps == sorted_timestamps
-    ), "Новости на главной странице не отсортированы по дате, самые свежие новости должны быть в начале списка"
+    assert all_timestamps == sorted_timestamps, (
+        "Новости на главной странице не отсортированы по дате,"
+        " самые свежие новости должны быть в начале списка"
+    )
 
 
 @pytest.mark.django_db
@@ -55,15 +59,18 @@ def test_comment_form_visibility(
     user_login_type, expected_answer, news_detail_url
 ):
     """
-    Проверяем, что анонимному пользователю недоступна форма для отправки комментария на странице отдельной новости,
+    Проверяем, что анонимному пользователю
+    недоступна форма для отправки комментария на странице отдельной новости,
     а авторизованному доступна.
     """
     response = user_login_type.get(news_detail_url)
     if expected_answer:
-        assert isinstance(
-            response.context["form"], CommentForm
-        ), "Форма для отправки комментария авторизованным пользователем не найдена в контексте"
+        assert isinstance(response.context["form"], CommentForm), (
+            "Форма для отправки комментария авторизованным пользователем"
+            " не найдена в контексте"
+        )
     else:
-        assert (
-            "form" not in response.context
-        ), "Форма для отправки комментария неавторизованным пользователем найдена в контексте"
+        assert "form" not in response.context, (
+            "Форма для отправки комментария"
+            " неавторизованным пользователем найдена в контексте"
+        )

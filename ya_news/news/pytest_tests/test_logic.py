@@ -12,7 +12,8 @@ def test_anonymous_user_cant_post_comment(
     client, form_data, news_detail_url, user_login_url
 ):
     """
-    Проверяем, что анонимный пользователь не может оставить комментарий.
+    Проверяем, что анонимный пользователь
+    не может оставить комментарий.
     """
     response = client.post(news_detail_url, data=form_data)
     expected_url = f"{user_login_url}?next={news_detail_url}"
@@ -26,7 +27,8 @@ def test_authenticated_user_can_post_comment(
     not_author_client, news_detail_url, not_author, form_data, news
 ):
     """
-    Проверяем, что авторизованный пользователь может оставить комментарий.
+    Проверяем, что авторизованный пользователь
+    может оставить комментарий.
     """
     response = not_author_client.post(news_detail_url, data=form_data)
     expected_url = f"{news_detail_url}#comments"
@@ -80,9 +82,7 @@ def test_author_can_edit_comment(
 def test_author_can_delete_comment(
     author_client, news_delete_url, news_detail_url
 ):
-    """
-    Проверяем, что автор новости может удалить свой комментарий.
-    """
+    """Проверяем, что автор новости может удалить свой комментарий."""
     response = author_client.post(news_delete_url)
     expected_url = f"{news_detail_url}#comments"
     assertRedirects(response, expected_url)
@@ -92,9 +92,8 @@ def test_author_can_delete_comment(
 def test_user_cant_edit_others_comment(
     not_author_client, form_data, comment, author, news_edit_url
 ):
-    """
-    Проверяем, что пользователь не может редактировать чужой комментарий.
-    """
+    """Проверяем, что пользователь
+    не может редактировать чужой комментарий."""
     response = not_author_client.post(news_edit_url, form_data)
     assert (
         response.status_code == HTTPStatus.NOT_FOUND
