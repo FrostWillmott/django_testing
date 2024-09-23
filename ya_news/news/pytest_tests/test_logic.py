@@ -90,8 +90,10 @@ def test_author_can_delete_comment(
 def test_user_cant_edit_others_comment(
     not_author_client, form_data, comment, author, news_edit_url
 ):
-    """Проверяем, что пользователь
-    не может редактировать чужой комментарий."""
+    """
+    Проверяем, что пользователь
+    не может редактировать чужой комментарий.
+    """
     response = not_author_client.post(news_edit_url, form_data)
     assert (
         response.status_code == HTTPStatus.NOT_FOUND

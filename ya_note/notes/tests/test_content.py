@@ -13,9 +13,7 @@ class TestContent(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        """
-        Создаём пользователей и заметку.
-        """
+        """Создаём пользователей и заметку."""
         cls.author = User.objects.create(username="Лев Толстой")
         cls.author_client = Client()
         cls.author_client.force_login(cls.author)
