@@ -65,9 +65,7 @@ def test_author_can_edit_comment(
     news_edit_url,
     comment,
 ):
-    """
-    Проверяем, что автор новости может отредактировать свой комментарий.
-    """
+    """Проверяем, что автор новости может отредактировать свой комментарий."""
     response = author_client.post(news_edit_url, form_data)
     expected_url = f"{news_detail_url}#comments"
     assertRedirects(response, expected_url)
@@ -108,9 +106,7 @@ def test_user_cant_edit_others_comment(
 
 
 def test_user_cant_delete_others_comment(not_author_client, news_delete_url):
-    """
-    Проверяем, что пользователь не может удалить чужой комментарий.
-    """
+    """Проверяем, что пользователь не может удалить чужой комментарий."""
     response = not_author_client.post(news_delete_url)
     assert (
         response.status_code == HTTPStatus.NOT_FOUND

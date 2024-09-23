@@ -10,15 +10,11 @@ User = get_user_model()
 
 
 class TestRoutes(TestCase):
-    """
-    Тесты проверяют корректность открытия и доступа к страницам.
-    """
+    """Тесты проверяют корректность открытия и доступа к страницам."""
 
     @classmethod
     def setUpTestData(cls):
-        """
-        Создаём пользователей и заметку.
-        """
+        """Создаём пользователей и заметку."""
         cls.author = User.objects.create(username="Лев Толстой")
         cls.author_client = Client()
         cls.author_client.force_login(cls.author)
@@ -32,9 +28,7 @@ class TestRoutes(TestCase):
         )
 
     def test_pages_availability(self):
-        """
-        Проверяем доступность страниц для анонимного пользователя
-        """
+        """Проверяем доступность страниц для анонимного пользователя"""
         urls = (
             "notes:home",
             "users:login",
@@ -50,9 +44,8 @@ class TestRoutes(TestCase):
                 ), f"Страница {name} недоступна"
 
     def test_authenticated_user_pages(self):
-        """
-        Проверяем доступность страниц для аутентифицированного пользователя
-        """
+        """Проверяем доступность страниц
+        для аутентифицированного пользователя"""
         urls = (
             "notes:list",
             "notes:success",
@@ -68,7 +61,8 @@ class TestRoutes(TestCase):
 
     def test_availability_for_comment_edit_and_delete(self):
         """
-        Проверяем доступность страниц для редактирования и удаления комментария автором и читателем заметок
+        Проверяем доступность страниц для редактирования
+        и удаления комментария автором и читателем заметок
         """
         users_statuses = (
             (self.author_client, HTTPStatus.OK),
@@ -83,9 +77,7 @@ class TestRoutes(TestCase):
                     f"Страница {name} недоступна"
 
     def test_redirect_for_anonymous_client(self):
-        """
-        Проверяем редирект анонимного пользователя на страницу логина
-        """
+        """Проверяем редирект анонимного пользователя на страницу логина"""
         login_url = reverse("users:login")
 
         urls = (
@@ -102,6 +94,7 @@ class TestRoutes(TestCase):
                 url = reverse(name, args=args)
                 redirect_url = f"{login_url}?next={url}"
                 response = self.client.get(url)
-                self.assertRedirects(
-                    response, redirect_url
-                ), f"Анонимный пользователь не перенаправлен на страницу логина со страницы {name}"
+                self.assertRedirects(response, redirect_url), (
+                    f"Анонимный пользователь не перенаправлен"
+                    f" на страницу логина со страницы {name}"
+                )

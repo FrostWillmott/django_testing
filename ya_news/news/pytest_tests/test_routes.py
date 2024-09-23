@@ -16,9 +16,7 @@ from pytest_django.asserts import assertRedirects
     ),
 )
 def test_pages_availability_for_anonymous_user(client, name_url):
-    """
-    Проверяем доступность страниц для анонимного пользователя.
-    """
+    """Проверяем доступность страниц для анонимного пользователя."""
     response = client.get(name_url)
     assert (
         response.status_code == HTTPStatus.OK
