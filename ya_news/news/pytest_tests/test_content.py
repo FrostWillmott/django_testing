@@ -32,7 +32,7 @@ def test_news_order_on_homepage(client, home_page_url, lots_of_news):
 
 @pytest.mark.django_db
 def test_comments_order_on_news_detail(
-    client, news, lots_of_comments, news_detail_url
+        client, news, lots_of_comments, news_detail_url
 ):
     """
     Проверяем, что комментарии на странице отдельной новости отсортированы
@@ -43,7 +43,7 @@ def test_comments_order_on_news_detail(
     all_timestamps = [comment.created for comment in all_comments]
     sorted_timestamps = sorted(all_timestamps)
     assert (
-        all_timestamps == sorted_timestamps
+            all_timestamps == sorted_timestamps
     ), "Комментарии на странице отдельной новости не отсортированы по дате"
 
 
@@ -51,12 +51,12 @@ def test_comments_order_on_news_detail(
 @pytest.mark.parametrize(
     "user_login_type, expected_answer",
     (
-        (pytest.lazy_fixture("client"), False),
-        (pytest.lazy_fixture("not_author_client"), True),
+            (pytest.lazy_fixture("client"), False),
+            (pytest.lazy_fixture("not_author_client"), True),
     ),
 )
 def test_comment_form_visibility(
-    user_login_type, expected_answer, news_detail_url
+        user_login_type, expected_answer, news_detail_url
 ):
     """
     Проверяем, что анонимному пользователю
@@ -64,17 +64,12 @@ def test_comment_form_visibility(
     а авторизованному доступна.
     """
     response = user_login_type.get(news_detail_url)
+    assert ("form" in response.context) is expected_answer, (
+        "Признак наличия формы для отправки комментария"
+        " не соответствует ожидаемому"
+    )
     if expected_answer:
-        assert "form" in response.context, (
-            "Форма для отправки комментария"
-            " авторизованным пользователем не найдена в контексте"
-        )
         assert isinstance(response.context["form"], CommentForm), (
             "Форма для отправки комментария авторизованным пользователем"
-            " не найдена в контексте"
-        )
-    else:
-        assert "form" not in response.context, (
-            "Форма для отправки комментария"
-            " неавторизованным пользователем найдена в контексте"
+            " не является формой CommentForm"
         )
