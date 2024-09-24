@@ -65,6 +65,10 @@ def test_comment_form_visibility(
     """
     response = user_login_type.get(news_detail_url)
     if expected_answer:
+        assert "form" in response.context, (
+            "Форма для отправки комментария"
+            " авторизованным пользователем не найдена в контексте"
+        )
         assert isinstance(response.context["form"], CommentForm), (
             "Форма для отправки комментария авторизованным пользователем"
             " не найдена в контексте"
