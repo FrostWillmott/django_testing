@@ -23,7 +23,7 @@ def test_news_count_on_homepage(client, home_page_url, lots_of_news):
 def test_news_order_on_homepage(client, home_page_url, lots_of_news):
     all_news = client.get(home_page_url).context.get("object_list")
     all_timestamps = [news.date for news in all_news]
-    sorted_timestamps = sorted(all_timestamps)
+    sorted_timestamps = sorted(all_timestamps, reverse=True)
     assert all_timestamps == sorted_timestamps, (
         "Новости на главной странице не отсортированы по дате,"
         " самые свежие новости должны быть в начале списка"
