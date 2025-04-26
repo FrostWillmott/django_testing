@@ -21,6 +21,7 @@ def test_pages_availability_for_anonymous_user(client, name_url):
         response.status_code == HTTPStatus.OK
     ), f"Страница {name_url} недоступна"
 
+
 @pytest.mark.django_db
 def test_logout_url_for_anonymous_user(client, user_logout_url):
     """Проверяем доступность страницы выхода для анонимного пользователя."""
@@ -28,7 +29,6 @@ def test_logout_url_for_anonymous_user(client, user_logout_url):
     assert (
         response.status_code == HTTPStatus.OK
     ), f"Страница {user_logout_url} недоступна"
-
 
 
 @pytest.mark.parametrize(
