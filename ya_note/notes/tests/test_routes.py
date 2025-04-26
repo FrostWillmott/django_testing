@@ -29,19 +29,29 @@ class TestRoutes(TestCase):
 
     def test_pages_availability(self):
         """Проверяем доступность страниц для анонимного пользователя"""
-        urls = (
+        get_urls = (
             "notes:home",
             "users:login",
-            "users:logout",
             "users:signup",
         )
-        for name in urls:
+
+        for name in get_urls:
             with self.subTest(name=name):
                 url = reverse(name)
                 response = self.client.get(url)
                 self.assertEqual(
                     response.status_code, HTTPStatus.OK
                 ), f"Страница {name} недоступна"
+
+        post_urls = ("users:logout",)
+        for name in post_urls:
+            with self.subTest(name=name):
+                url = reverse(name)
+                response = self.client.post(url)
+                (
+                    self.assertEqual(response.status_code, HTTPStatus.OK),
+                    f"Страница {name} недоступна",
+                )
 
     def test_authenticated_user_pages(self):
         """

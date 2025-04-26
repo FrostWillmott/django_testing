@@ -90,7 +90,7 @@ class TestNotesCreation(TestCase):
         note_count = Note.objects.count()
         self.assertEqual(note_count, note_count_before), "Заметка создана"
         self.assertFormError(
-            response, "form", "slug", "slug" + WARNING
+            response.context["form"], "slug", "slug" + WARNING
         ), "Сообщение об ошибке не соответствует ожидаемому"
 
     def test_slug_is_generated_if_not_provided(self):

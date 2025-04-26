@@ -50,7 +50,8 @@ def test_comment_with_prohibited_words(
     """
     bad_words_data = {"text": f"Какой-то текст, {bad_word}, еще текст"}
     response = author_client.post(news_detail_url, data=bad_words_data)
-    assertFormError(response, form="form", field="text", errors=WARNING)
+
+    assertFormError(response.context["form"], field="text", errors=WARNING)
     assert (
         Comment.objects.count() == 0
     ), "Комментарий создан, но не должен быть"

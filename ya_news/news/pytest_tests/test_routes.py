@@ -1,6 +1,6 @@
-from http import HTTPStatus
-
 import pytest
+
+from http import HTTPStatus
 from pytest_django.asserts import assertRedirects
 
 
@@ -11,7 +11,6 @@ from pytest_django.asserts import assertRedirects
         pytest.lazy_fixture("home_page_url"),
         pytest.lazy_fixture("news_detail_url"),
         pytest.lazy_fixture("user_login_url"),
-        pytest.lazy_fixture("user_logout_url"),
         pytest.lazy_fixture("user_signup_url"),
     ),
 )
@@ -21,6 +20,15 @@ def test_pages_availability_for_anonymous_user(client, name_url):
     assert (
         response.status_code == HTTPStatus.OK
     ), f"Страница {name_url} недоступна"
+
+@pytest.mark.django_db
+def test_logout_url_for_anonymous_user(client, user_logout_url):
+    """Проверяем доступность страницы выхода для анонимного пользователя."""
+    response = client.post(user_logout_url)
+    assert (
+        response.status_code == HTTPStatus.OK
+    ), f"Страница {user_logout_url} недоступна"
+
 
 
 @pytest.mark.parametrize(
@@ -38,10 +46,9 @@ def test_pages_availability_for_anonymous_user(client, name_url):
     ),
 )
 def test_pages_availability_for_different_users(
-    parametrized_client, expected_status, name_url
+    parametrized_client, expected_status, name_url,
 ):
-    """
-    Проверяем, что удаления и редактирования комментария доступны
+    """Проверяем, что удаления и редактирования комментария доступны
     автору комментария, авторизованный пользователь
     не может зайти на страницы редактирования
     или удаления чужих комментариев (возвращается ошибка 404).
@@ -62,8 +69,7 @@ def test_pages_availability_for_different_users(
     ),
 )
 def test_redirects(client, name_url, user_login_url):
-    """
-    Проверяем, что при попытке перейти на страницу редактирования
+    """Проверяем, что при попытке перейти на страницу редактирования
     или удаления комментария анонимный пользователь
     перенаправляется на страницу авторизации.
     """
